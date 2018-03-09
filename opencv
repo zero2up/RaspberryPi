@@ -1,0 +1,34 @@
+[参考部分](https://www.lylinux.net/article/2017/7/16/24.html)
+[参考部分](http://blog.csdn.net/zmqgeek/article/details/78231042)
+
+mkdir FaceID
+cd FaceID
+sudo apt-get install cmake git
+sudo apt-get install build-essential cmake pkg-config
+sudo apt-get install libjpeg-dev libjasper-dev libpng12-dev
+sudo apt-get install libgtk2.0-dev libavcodec-dev libavformat-dev libswscale-dev
+sudo apt-get install libtbb2 libtbb-dev libdc1394-22-dev
+
+git clone https://github.com/opencv/opencv.git       
+git clone https://github.com/opencv/opencv_contrib.git
+
+cp -R ./opencv_contrib/moudles/freetype ./opencv/moudles/
+cp -R ./opencv_contrib/moudles/face ./opencv/moudles/
+
+cd ./opencv
+mkdir release
+cd release
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local ..
+make 
+sudo make install
+
+sudo ldconfig
+
+python -c "import cv2;print(cv2.__version__)"
+
+-------------
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_INSTALL_PREFIX=/usr/local \
+    -D INSTALL_PYTHON_EXAMPLES=ON \
+    -D OPENCV_EXTRA_MODULES_PATH=~/opencv_contrib/modules \
+    -D BUILD_EXAMPLES=ON ..
