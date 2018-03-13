@@ -204,3 +204,25 @@ Displays the exposure, analogue and digital gains, and AWB settings used.
 Sets blue and red gains (as floating point numbers) to be applied when  -awb -off is set e.g. -awbg 1.5,1.2
 
     --mode, -md
+
+### raspivid
+    --timed,    -td     Do timed switches between capture and pause
+This options allows the video capture to be paused and restarted at particular time intervals. Two values are required: the on time and the off time.
+
+    raspivid -o test.h264 -t 25000 -timed 2500,5000
+will record for a period of 25 seconds. The recording will be over a timeframe consisting of 2500ms (2.5s) segments with 5000ms (5s) gaps, repeating over the 20s. So the entire recording will actually be only 10s long, since 4 segments of 2.5s = 10s separated by 5s gaps.
+
+    --keypress, -k      Toggle between record and pause on Enter keypress
+On each press of the Enter key, the recording will be paused or restarted. Pressing X then Enter will stop recording and close the application. Note that the timeout value will be used to signal the end of recording, but is only checked after each Enter keypress; so if the system is waiting for a keypress, even if the timeout has expired, it will still wait for the keypress before exiting.
+
+    --segment,  -sg     Segment the stream into multiple files
+Rather than creating a single file, the file is split into segments of approximately the number of milliseconds specified. In order to provide different filenames, you should add  %04d or similar at the point in the filename where you want a segment count number to appear e.g:
+
+    --segment 3000 -o video%04d.h264
+will produce video clips of approximately 3000ms (3s) long, named  video0001.h264, video0002.h264 etc. The clips should be seamless (no frame drops between clips), but the accuracy of each clip length will depend on the intraframe period, as the segments will always start on an I-frame. They will therefore always be equal or longer to the specified period.
+
+    --wrap, -wr     Set the maximum value for segment number
+When outputting segments, this is the maximum the segment number can reach before it's reset to 1, giving the ability to keep recording segments, but overwriting the oldest one. So if set to 4, in the segment example above, the files produced will be video0001.h264, video0002.h264, video0003.h264, and  video0004.h264. Once video0004.h264 is recorded, the count will reset to 1, and video0001.h264 will be overwritten.
+
+    --start,    -sn     Set the initial segment number
+When outputting segments, this is the initial segment number, giving the ability to resume a previous recording from a given segment. The default value is 1.
