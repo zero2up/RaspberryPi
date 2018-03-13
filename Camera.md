@@ -4,12 +4,28 @@
 ### "Enable Camera" in the menu and reboot
 
 ### Taking a picture in 2000ms, and save it to p1.jpg
-> $ raspistill -o p1.jpg -t 2000
+> $ raspistill -t 2000 -o p1.jpg
+
+Run the camera forever, taking a picture when Enter is pressed:
+
+> $ raspistill -t 0 -k -o my_pics%02d.jpg
+
+Force the preview to appear at coordinate 100,100, with width 300 pixels and height 200 pixels:
+
+> $ raspistill -t 2000 -o image.jpg -p 100,100,300,200
 
 ### Taking a Video 
 - the desired length (in milliseconds) with "-t" option.
 - the resolution to wxh, use "-w" and "-h" options.
 > $ raspivid -o v1.h264 -t 10000 -w 1280 -h 720
+
+Record a 5s clip at a specified bitrate (3.5Mbits/s):
+
+> $ raspivid -t 5000 -o video.h264 -b 3500000
+
+Record a 5s clip at a specified framerate (5fps):
+
+> $ raspivid -t 5000 -o video.h264 -f 5
 
 #### Use MP4Box application that comes with gpac package.
 > $ sudo apt-get install -y gpac
@@ -205,7 +221,7 @@ Sets blue and red gains (as floating point numbers) to be applied when  -awb -of
 
     --mode, -md
 
-### raspivid
+## raspivid
     --timed,    -td     Do timed switches between capture and pause
 This options allows the video capture to be paused and restarted at particular time intervals. Two values are required: the on time and the off time.
 
