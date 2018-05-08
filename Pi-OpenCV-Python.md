@@ -1,7 +1,10 @@
 *Ref*:
 
 [树莓派中PiCamera+OpenCV的使用](https://blog.csdn.net/u012005313/article/details/70244747)
+
 [Picamera.camera](http://picamera.readthedocs.io/en/release-1.13/_modules/picamera/camera.html#PiCamera.capture)
+
+[Picamera: OpenCV | Rapid capture and streaming | Web streaming](http://picamera.readthedocs.io/en/release-1.13/recipes2.html)
 
 ### Image
 
@@ -69,11 +72,12 @@ freq = 10
 
 with picamera.PiCamera() as camera:
     camera.resolution = (width, height)
+    camera.vflip = True
     camera.framerate = 24
     time.sleep(freq)
-    image = np.empty((width * height * 3,), dtype=np.uint8)
+    image = np.empty((height * width * 3,), dtype=np.uint8)
     camera.capture(image, 'bgr')
-    image = image.reshape((width, height, 3))
+    image = image.reshape((height, width, 3))
 
     cv2.imshow("img", image)
     cv2.waitKey(0)
@@ -100,3 +104,33 @@ format:
     'rgba'  - Write the raw video data to a file in 32-bit RGBA format
     'bgr'   - Write the raw video data to a file in 24-bit BGR format
     'bgra'  - Write the raw video data to a file in 32-bit BGRA format
+    
+#### show image continuously with opencv
+```
+import io
+from time import sleep
+import picamera
+import numpy as np
+import cv2
+
+with picamera.PiCamera() as camera:
+    camera.resolution = (320, 240)
+    sleep(2)
+
+    stream = io.BytesIO()
+    for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
+        # use_video_port=True 更流畅些
+        # important!
+        stream.seek(0) # 没它画面不动，这里再加一个画面延迟没不加明显
+        
+        data = np.fromstring(stream.getvalue(), dtype=np.uint8)
+        # cv2.imdecode: Reads an image from a buffer in memory.
+        image = cv2.imdecode(data, cv2.IMREAD_UNCHANGED)
+
+        cv2.imshow("vid", image)
+        cv2.waitKey(1) # Ctrl+C   stop
+     
+        stream.truncate()
+        stream.seek(0)
+        
+```  
