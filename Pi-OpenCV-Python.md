@@ -6,6 +6,8 @@
 
 [Picamera: OpenCV | Rapid capture and streaming | Web streaming](http://picamera.readthedocs.io/en/release-1.13/recipes2.html)
 
+[OpenCV-Python](https://docs.opencv.org/master/d6/d00/tutorial_py_root.html)
+
 ### Image
 
 #### Image连拍保存
@@ -114,8 +116,8 @@ import numpy as np
 import cv2
 
 with picamera.PiCamera() as camera:
-    camera.resolution = (320, 240)
-    sleep(2)
+    camera.resolution = (240, 180)
+    sleep(1)
 
     stream = io.BytesIO()
     for foo in camera.capture_continuous(stream, format='jpeg', use_video_port=True):
@@ -132,5 +134,19 @@ with picamera.PiCamera() as camera:
      
         stream.truncate()
         stream.seek(0)
-        
-```  
+```
+
+### OpenCV直接对摄像头的调用
+have some errors
+```
+import cv2
+
+capture = cv2.VideoCapture(0)
+capture.set(cv2.CAP_PROP_FRAME_WIDTH, 240)
+capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 180)
+
+while True:
+    retval, image = capture.read()
+    print(retval)
+    cv2.imshow("capture", image)
+```    
