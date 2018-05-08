@@ -1,44 +1,50 @@
 # RaspberryPi
+
+### Ref
 [RaspiCam](https://www.raspberrypi.org/documentation/raspbian/applications/camera.md)
 
 ### "Enable Camera" in the menu and reboot
+    sudo raspi-config
+    或者在图形界面操作
 
 ### Taking a picture in 2000ms, and save it to p1.jpg
-> $ raspistill -t 2000 -o p1.jpg
+    raspistill -t 2000 -o p1.jpg
 
 Run the camera forever, taking a picture when Enter is pressed:
 
-> $ raspistill -t 0 -k -o my_pics%02d.jpg
+    raspistill -t 0 -k -o my_pics%02d.jpg
 
 Force the preview to appear at coordinate 100,100, with width 300 pixels and height 200 pixels:
 
-> $ raspistill -t 2000 -o image.jpg -p 100,100,300,200
+    raspistill -t 2000 -o image.jpg -p 100,100,300,200
 
 ### Taking a Video 
 - the desired length (in milliseconds) with "-t" option.
 - the resolution to wxh, use "-w" and "-h" options.
-> $ raspivid -o v1.h264 -t 10000 -w 1280 -h 720
+```
+raspivid -o v1.h264 -t 10000 -w 1280 -h 720
+```
 
 Record a 5s clip at a specified bitrate (3.5Mbits/s):
 
-> $ raspivid -t 5000 -o video.h264 -b 3500000
+    raspivid -t 5000 -o video.h264 -b 3500000
 
 Record a 5s clip at a specified framerate (5fps):
 
-> $ raspivid -t 5000 -o video.h264 -f 5
+    raspivid -t 5000 -o video.h264 -f 5
 
 #### Use MP4Box application that comes with gpac package.
-> $ sudo apt-get install -y gpac
+    sudo apt-get install -y gpac
 
 #### convert the raw H.264 video stream into .mp4 format with 10 frames per second:
->$ MP4Box -fps 30 -add v1.h264 v1.mp4
+    MP4Box -fps 30 -add v1.h264 v1.mp4
 
 #### SMplayer can open mp4
 
 ### Shooting Time Lapse Images and Combining All Images into a Time Lapse Video
->$ mkdir img-lapse
+    mkdir img-lapse
 
->$ raspistill -o /home/pi/img-lapse/img%03d.jpg -tl 20000 -t 500000
+    raspistill -o /home/pi/img-lapse/img%03d.jpg -tl 20000 -t 500000
 
 The '-tl' option allows you to take a picture every 20 seconds. 
 
